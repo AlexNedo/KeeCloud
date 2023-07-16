@@ -136,6 +136,7 @@ namespace KeeCloud.Forms
                         ecxeption =>
                         {
                             MessageBox.Show(ecxeption.Message, "Error");
+                            KeePassLib.Utility.MessageService.ShowWarning("Exception details: " + ecxeption);
                             this.StartOver();
                         },
                         // finally

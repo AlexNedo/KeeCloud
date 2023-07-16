@@ -60,29 +60,37 @@ namespace KeeCloud.WebRequests
 
         public override WebResponse GetResponse()
         {
-            if (this.Method == IOConnection.WrmDeleteFile)
+            try
             {
-                this.provider.Delete(this.GetCredentials());
-                return new SuccessWebResponse();
-            }
-            else if (this.Method == IOConnection.WrmMoveFile)
-            {
-                var destination = Headers[IOConnection.WrhMoveFileTo];
-                this.provider.Move(new Uri(destination), this.GetCredentials());
-                return new SuccessWebResponse();
-            }
-            else if ((this.Method ?? string.Empty).ToLowerInvariant() == "post")
-            {
-                using (var stream = this.requestStream.GetReadableStream())
+                if (this.Method == IOConnection.WrmDeleteFile)
                 {
-                    this.provider.Put(stream, this.GetCredentials());
+                    this.provider.Delete(this.GetCredentials());
                     return new SuccessWebResponse();
                 }
+                else if (this.Method == IOConnection.WrmMoveFile)
+                {
+                    var destination = Headers[IOConnection.WrhMoveFileTo];
+                    this.provider.Move(new Uri(destination), this.GetCredentials());
+                    return new SuccessWebResponse();
+                }
+                else if ((this.Method ?? string.Empty).ToLowerInvariant() == "post")
+                {
+                    using (var stream = this.requestStream.GetReadableStream())
+                    {
+                        this.provider.Put(stream, this.GetCredentials());
+                        return new SuccessWebResponse();
+                    }
+                }
+                else
+                {
+                    Stream stream = this.provider.Get(this.GetCredentials());
+                    return new GetWebResponse(stream);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                Stream stream = this.provider.Get(this.GetCredentials());
-                return new GetWebResponse(stream);
+                KeePassLib.Utility.MessageService.ShowWarning("Exception details: " + ex);
+                throw;
             }
         }
 

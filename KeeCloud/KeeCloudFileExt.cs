@@ -2,6 +2,7 @@
 using KeePass.Plugins;
 using System.Diagnostics;
 using System.Windows.Forms;
+using System.Net;
 
 namespace KeeCloud
 {
@@ -13,6 +14,8 @@ namespace KeeCloud
 
         public override bool Initialize(IPluginHost host)
         {
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+
 #if DEVELOPING
             // Obviously you can attatch directly to the KeePass process from Visual Studio as well if you prefer
             try
