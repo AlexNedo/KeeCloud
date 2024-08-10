@@ -15,6 +15,7 @@ namespace KeeCloud
         public override bool Initialize(IPluginHost host)
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+            ServicePointManager.DefaultConnectionLimit = 20;
 
 #if DEVELOPING
             // Obviously you can attatch directly to the KeePass process from Visual Studio as well if you prefer
